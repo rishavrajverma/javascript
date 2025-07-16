@@ -1,0 +1,86 @@
+* {
+  box-sizing: border-box;
+}
+.app {
+  background-color: beige;
+  min-height: 100vh;
+}
+.heading {
+  padding-left: 50px;
+  margin-bottom: 0%;
+}
+#applicationForm input,
+#applicationForm select {
+  box-shadow: none;
+  padding: 5px;
+}
+#searchInput {
+  box-shadow: none;
+  padding: 2px;
+  padding-left: 10px;
+}
+.main {
+  display: flex;
+  padding: 5px;
+}
+.left {
+  background-color: white;
+  flex: 0 0 20%;
+  min-height: 85vh;
+  padding-bottom: 5px;
+}
+.right {
+  background-color: white;
+  flex: 0 0 80%;
+  min-height: 85vh;
+}
+form {
+  display: flex;
+  flex-direction: column;
+}
+form input,
+form select,
+form textarea {
+  margin-bottom: 2px;
+  font-weight: bold;
+}
+table {
+  width: 100%;
+}
+table,
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 3px;
+  text-align: left;
+}
+.status-applied {
+  background-color: #f0f8ff;
+}
+.status-interviewing {
+  background-color: #fffacd;
+}
+.status-rejected {
+  background-color: #c8e6c9;
+}
+button.edit,
+button.delete {
+  margin-right: 5px;
+}
+#clearBtn {
+  display: none;
+}
+#searchInput:not(:placeholder-shown) + #clearBtn {
+  display: block;
+}
+/* media queies */
+
+@media screen and (max-width: 600px) {
+  .main {
+    flex-direction: column;
+  }
+  .left,
+  .right {
+    flex: 0 0 100%;
+  }
+}
