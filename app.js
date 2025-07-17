@@ -3,9 +3,17 @@ let localStorageData =
 let editIndex = null;
 
 //take all required DOM elements
+const companyName = document.getElementById("company");
+const role = document.getElementById("role");
 const jobType = document.getElementById("jobType");
 const locationAddresh = document.getElementById("location");
 const locationLabel = document.getElementById("locationLabel");
+const statusSelection = document.getElementById("status");
+const erorCompany = document.getElementById("erorCompany");
+const erorJobRole = document.getElementById("erorJobRole");
+const erorJobType = document.getElementById("erorJobType");
+const erorLocation = document.getElementById("erorLocation");
+const erorJobStatus = document.getElementById("erorJobStatus");
 const form = document.getElementById("applicationForm");
 const submit = document.getElementById("submitBtn");
 const tableList = document.getElementById("List");
@@ -18,27 +26,81 @@ jobType.addEventListener("change", () => {
   locationAddresh.disabled = isRemote;
   locationAddresh.style.display = isRemote ? "none" : "block";
   locationLabel.style.display = isRemote ? "none" : "block";
+  erorLocation.style.display = isRemote ? "none" : "block";
+  jobType.value !== ""
+    ? ((erorJobType.style.display = "none"),
+      (erorLocation.style.display = "none"),
+      (jobType.style.borderColor = ""))
+    : (erorJobType.style.display = "block");
 });
 
+//change application status validation handle
+statusSelection.addEventListener("change", () => {
+  statusSelection.value !== ""
+    ? ((erorJobStatus.style.display = "none"),
+      (statusSelection.style.borderColor = ""))
+    : (erorJobStatus.style.display = "block");
+});
 //add current date
-console.log(new Date().toISOString().split("T")[0]);
 document.getElementById("date").value = new Date().toISOString().split("T")[0];
 
+//check validation
+function validation() {
+  let isValid = true;
+
+  companyName.value.trim() === ""
+    ? ((companyName.style.borderColor = "red"),
+      (erorCompany.style.display = "block"),
+      (isValid = false))
+    : ((companyName.style.borderColor = ""),
+      (erorCompany.style.display = "none"));
+
+  role.value.trim() === ""
+    ? ((role.style.borderColor = "red"),
+      (erorJobRole.style.display = "block"),
+      (isValid = false))
+    : ((erorJobRole.style.display = "none"), (role.style.borderColor = ""));
+
+  jobType.value.trim() === ""
+    ? ((jobType.style.borderColor = "red"),
+      (erorJobType.style.display = "block"),
+      (isValid = false))
+    : ((erorJobType.style.display = "none"), (jobType.style.borderColor = ""));
+
+  jobType.value !== "Remote" && locationAddresh.value.trim() === ""
+    ? ((locationAddresh.style.borderColor = "red"),
+      (erorLocation.style.display = "block"),
+      (isValid = false))
+    : ((erorLocation.style.display = "none"),
+      (locationAddresh.style.borderColor = ""));
+
+  statusSelection.value.trim() === ""
+    ? ((statusSelection.style.borderColor = "red"),
+      (erorJobStatus.style.display = "block"),
+      (isValid = false))
+    : ((erorJobStatus.style.display = "none"),
+      (statusSelection.style.borderColor = ""));
+
+  return isValid;
+}
 //form submition process on submit event based on edit/new form
 form.addEventListener("submit", (e) => {
-  e.preventDefault;
+  e.preventDefault();
+  //validation function
+  if (!validation()) {
+    return;
+  }
   //collect all form data
   const formData = {
     name: document.getElementById("company").value,
     role: document.getElementById("role").value,
     jobType: jobType.value,
-    location: jobType.value === "Remote" ? "---------" : locationAddresh.value,
+    location:
+      jobType.value === "Remote" ? "-----------" : locationAddresh.value,
     date: document.getElementById("date").value,
     status: document.getElementById("status").value,
     notes: document.getElementById("notes").value,
   };
-  console.log(formData);
-  alert(JSON.stringify(formData));
   //check edit mood or new form data
   if (editIndex !== null) {
     localStorageData[editIndex] = formData;
@@ -51,8 +113,8 @@ form.addEventListener("submit", (e) => {
   localStorage.setItem("jobApplications", JSON.stringify(localStorageData));
   form.reset();
   //change condition for locationAddresh
-  locationAddresh.disabled = "false";
   locationAddresh.style.display = "block";
+  locationAddresh.disabled = false;
   locationLabel.style.display = "block";
   showForm();
 });
@@ -76,26 +138,26 @@ function showForm(filteredData = null) {
     <td >${element.jobType}</td>
     <td >${element.location}</td>
     <td >${element.date}</td>
-    <td class='text-${
+    <td style='font-weight:bold; color:${
       { element }.element.status == "Hired"
-        ? "success"
+        ? "green;"
         : { element }.element.status == "Rejected"
-        ? "danger"
+        ? "red;"
         : null
     }'>${element.status}</td>
-    <td class="w-25">${element.notes}</td>
-    <td class="text-end">
-       <button class="btn btn-sm btn-warning py-0" onclick="editApplication(${index})">Edite</button>
-       <button class="btn btn-sm btn-danger py-0" onclick="deleteApplication(${index})">Delete</button>
+    <td >${element.notes}</td>
+    <td style="text-align:end" class="actionBox">
+       <button class="edit" onclick="editApplication(${index})">Edit</button>
+       <button class="delete" onclick="deleteApplication(${index})">Delete</button>
       </td>
     `;
     tableList.appendChild(row);
   });
   const total = localStorageData.length;
-  statusCounts.innerText = `Job Application : ${total} | Applied: ${counts.Applied} | Interviewing : ${counts.Interviewing} | Hired : ${counts.Hired} | Rejected: ${counts.Rejected}`;
+  statusCounts.innerHTML = `<div>Job Application : ${total} | Applied: ${counts.Applied} | Interviewing : ${counts.Interviewing} | Hired : <span style="color:green; font-weight: bold">${counts.Hired}</span> | Rejected: <span style="color:red; font-weight:bold">${counts.Rejected}</span></div>`;
   if (total === 0) {
     tableList.innerHTML =
-      "<tr class='py-4'><td colspan='9' class='text-center py-4'><h3>No application found !</h3><p>Add new appliction</p></td></tr>";
+      "<tr><td colspan='9' class='noApplication'><h3>No application found !</h3><p>Add new appliction</p></td></tr>";
   }
 }
 
@@ -118,7 +180,7 @@ document.getElementById("searchInput").addEventListener("input", (e) => {
   //add condition for no result found in given lists or undefined
   if (filtered.length === 0 && localStorageData.length > 0) {
     tableList.innerHTML =
-      '<tr><td colspan=9 ><h3 class="text-center py-2">No search result found !</h3></tr></td>';
+      '<tr><td colspan=9 ><h3 class="noApplication">No search result found !</h3></tr></td>';
   }
 });
 
@@ -129,7 +191,7 @@ clearBtn.addEventListener("click", () => {
 });
 
 //Edit form
-window.editApplication = function (index) {
+function editApplication(index) {
   const formData = localStorageData[index];
   //destructure all fields and set to forms
   document.getElementById("company").value = formData.name;
@@ -137,30 +199,26 @@ window.editApplication = function (index) {
   jobType.value = formData.jobType;
   //dispatch change event for setting hide/show of location
   jobType.dispatchEvent(new Event("change"));
-  locationAddresh.value = formData.location;
+  locationAddresh.value =
+    formData.location == "-----------" ? "" : formData.location;
   document.getElementById("date").value = formData.date;
   document.getElementById("status").value = formData.status;
   document.getElementById("notes").value = formData.notes;
+  erorLocation.style.display = "none";
 
   submit.textContent = "Update Application";
   editIndex = index;
-};
+}
 
 //Delete form
-window.deleteApplication = function (index) {
+function deleteApplication(index) {
   if (confirm("Are you sure want to delete ?")) {
     localStorageData.splice(index, 1);
     localStorage.setItem("jobApplications", JSON.stringify(localStorageData));
     showForm();
   }
-};
+}
 
-//load existing data on page load
 document.addEventListener("DOMContentLoaded", () => {
   showForm();
 });
-
-//practice protype in object
-
-console.log(jobType.__proto__);
-// console.log(jobType.constructor);
