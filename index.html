@@ -15,8 +15,8 @@
         Rejected: 0
       </div>
       <div class="main">
-        <div class="left container border rounded">
-          <h2>Application Form</h2>
+        <div class="left container">
+          <h2 style="text-align: center;">Application Form</h2>
           <form id="applicationForm">
             <label for="company"> Complany Name :</label>
             <input
@@ -69,20 +69,19 @@
           </form>
         </div>
 
-        <div class="right container border rounded">
-          <h3 class="text-center">Job Applications Table</h3>
-          <div style="position: relative; width: 300px;">
+        <div class="right">
+          <h3 class="table-heading">Job Applications Table</h3>
+          <div class="searchBox">
            <input
            type="text"
            id="searchInput"
-           class="form-control mb-3"
            placeholder="Search"/>
-           <i class="fas fa-times clear-btn" style="position: absolute; right: 10px; top: 5px; cursor: pointer; color: red; font-size: larger;" id="clearBtn"></i>
+           <i class="fas fa-times"  id="clearBtn"></i>
           </div>
 
           <div class="table-main">
           <table>
-            <thead>
+            <thead >
               <tr>
                 <th></th>
                 <th>Company</th>
@@ -91,8 +90,8 @@
                 <th>Location</th>
                 <th>Date</th>
                 <th>Status</th>
-                <th >Notes</th>
-                <th >Actions</th>
+                <th style="min-width: 200px;">Notes</th>
+                <th style="text-align:center">Actions</th>
               </tr>
             </thead>
             <tbody id="List"></tbody>

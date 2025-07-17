@@ -28,7 +28,9 @@ jobType.addEventListener("change", () => {
   locationLabel.style.display = isRemote ? "none" : "block";
   erorLocation.style.display = isRemote ? "none" : "block";
   jobType.value !== ""
-    ? ((erorJobType.style.display = "none"), (jobType.style.borderColor = ""))
+    ? ((erorJobType.style.display = "none"),
+      (erorLocation.style.display = "none"),
+      (jobType.style.borderColor = ""))
     : (erorJobType.style.display = "block");
 });
 
@@ -136,26 +138,26 @@ function showForm(filteredData = null) {
     <td >${element.jobType}</td>
     <td >${element.location}</td>
     <td >${element.date}</td>
-    <td class='text-${
+    <td style='font-weight:bold; color:${
       { element }.element.status == "Hired"
-        ? "success"
+        ? "green;"
         : { element }.element.status == "Rejected"
-        ? "danger"
+        ? "red;"
         : null
     }'>${element.status}</td>
-    <td class="w-25">${element.notes}</td>
-    <td class="text-end">
-       <button class="btn btn-sm btn-warning py-0" onclick="editApplication(${index})">Edit</button>
-       <button class="btn btn-sm btn-danger py-0" onclick="deleteApplication(${index})">Delete</button>
+    <td >${element.notes}</td>
+    <td style="text-align:end" class="actionBox">
+       <button class="edit" onclick="editApplication(${index})">Edit</button>
+       <button class="delete" onclick="deleteApplication(${index})">Delete</button>
       </td>
     `;
     tableList.appendChild(row);
   });
   const total = localStorageData.length;
-  statusCounts.innerHTML = `<div>Job Application : ${total} | Applied: ${counts.Applied} | Interviewing : ${counts.Interviewing} | Hired : <span class='text-success fw-bold'>${counts.Hired}</span> | Rejected: <span class='text-danger fw-bold'>${counts.Rejected}</span></div>`;
+  statusCounts.innerHTML = `<div>Job Application : ${total} | Applied: ${counts.Applied} | Interviewing : ${counts.Interviewing} | Hired : <span style="color:green; font-weight: bold">${counts.Hired}</span> | Rejected: <span style="color:red; font-weight:bold">${counts.Rejected}</span></div>`;
   if (total === 0) {
     tableList.innerHTML =
-      "<tr><td colspan='9' class='text-center py-4'><h3>No application found !</h3><p>Add new appliction</p></td></tr>";
+      "<tr><td colspan='9' class='noApplication'><h3>No application found !</h3><p>Add new appliction</p></td></tr>";
   }
 }
 
@@ -178,7 +180,7 @@ document.getElementById("searchInput").addEventListener("input", (e) => {
   //add condition for no result found in given lists or undefined
   if (filtered.length === 0 && localStorageData.length > 0) {
     tableList.innerHTML =
-      '<tr><td colspan=9 ><h3 class="text-center py-2">No search result found !</h3></tr></td>';
+      '<tr><td colspan=9 ><h3 class="noApplication">No search result found !</h3></tr></td>';
   }
 });
 
